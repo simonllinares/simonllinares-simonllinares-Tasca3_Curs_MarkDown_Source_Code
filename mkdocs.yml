@@ -1,0 +1,15 @@
+site_name: POO How To
+docs_dir: "md"
+site_dir: "site"
+nav:
+  - 1. Introducción: index.md
+  - 2. Cómo crear una clave primaria: CrearCP.md
+  - 3. Cómo hacer que un campo sea obligatorio-opcional: CampoOOP.md
+  - 4. Cómo crear una relación uno a muchos: Relacion1M.md
+  - 5. Cómo hacer una Relación muchos a muchos: RelacionMM.md
+  - 6. Cómo hacer que una relación sea de agregación o de composición: RelacionAGRCOMP.md
+
+theme:
+  name: 'readthedocs'
+  logo: 'img/favicon.ico'
+  favicon: 'img/favicon.ico'

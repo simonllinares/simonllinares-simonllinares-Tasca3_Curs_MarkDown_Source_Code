@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>2. Cómo crear una clave primaria - POO How To</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "2. C\u00f3mo crear una clave primaria";
+        var mkdocs_page_input_path = "CrearCP.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="..">
+          <img src="../img/favicon.ico" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../index.html">1. Introducción</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">2. Cómo crear una clave primaria</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../CampoOOP/index.html">3. Cómo hacer que un campo sea obligatorio-opcional</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Relacion1M/index.html">4. Cómo crear una relación uno a muchos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../RelacionMM/index.html">5. Cómo hacer una Relación muchos a muchos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../RelacionAGRCOMP/index.html">6. Cómo hacer que una relación sea de agregación o de composición</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">POO How To</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">2. Cómo crear una clave primaria</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="como-crear-una-clave-primaria">Cómo crear una clave primaria</h2>
+<ul>
+<li>Crear una propiedad de solo lectura basada en un campo de respaldo estático para llevar la cuenta de objetos creados</li>
+<li>Permite hacer saber cuántos productos se han creado en total</li>
+<li>No es útil en entornos multithread porque varios hilos podrían leer su valor a la vez</li>
+</ul>
+<pre><code class="language-csharp">public class Producto
+{
+    private static int _contadorProductos = 0; //Campo estático: solo hay una copia compartida por todas las instancias de la clase
+
+    public int Id { get; } // Esto no es multithread-safe
+    public string Nombre { get; }
+
+    public Producto(string nombre)
+    {
+        _contadorProductos++;
+        Id = _contadorProductos;
+        Nombre = nombre; // Se debería comprobar que nombre no sea ni null ni vacío
+    }
+
+    public static int ProductosCreados =&gt; _contadorProductos;  // Propiedad estática: permite acceder al contador sin un objeto
+
+    public override string ToString() =&gt; $&quot;ID: {Id}, Nombre: {Nombre}&quot;;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Producto producto1 = new(&quot;Producto A&quot;);
+        Console.WriteLine(producto1);
+        Producto producto2 = new(&quot;Producto B&quot;);
+        Console.WriteLine(producto2);
+        Console.WriteLine($&quot;Total de productos creados: {Producto.ProductosCreados}&quot;);
+    }
+}
+</code></pre>
+<ul>
+<li>También se puede crear con un GUID</li>
+<li>Ventajas: Multithread-safe. Útil en sistemas distribuidos</li>
+<li>Desventajas: ocupa 16 <em>Bytes</em> frete a los 4 de un <code>int</code>. Es más difícil de leer para humanos</li>
+</ul>
+<pre><code class="language-csharp">public class Producto
+{
+    public Guid Id { get; } 
+    public string Nombre { get; }
+
+    public Producto(string nombre)
+    {
+        Id = Guid.NewGuid(); // Multithread-safe. Útil en sistemas distribuidos
+        Nombre = nombre; // Se debería comprobar que nombre no sea ni null ni vacío
+    }
+    public override string ToString() =&gt; $&quot;Id={Id}, Nombre={Nombre}]&quot;;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Producto producto1 = new(&quot;Producto A&quot;);
+        Console.WriteLine(producto1);
+        Producto producto2 = new(&quot;Producto B&quot;);
+        Console.WriteLine(producto2);
+    }
+}
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="1. Introducción"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../CampoOOP/" class="btn btn-neutral float-right" title="3. Cómo hacer que un campo sea obligatorio-opcional">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../CampoOOP/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

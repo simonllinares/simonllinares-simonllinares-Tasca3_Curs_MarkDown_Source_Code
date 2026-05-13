@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>3. Cómo hacer que un campo sea obligatorio-opcional - POO How To</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "3. C\u00f3mo hacer que un campo sea obligatorio-opcional";
+        var mkdocs_page_input_path = "CampoOOP.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="..">
+          <img src="../img/favicon.ico" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../index.html">1. Introducción</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../CrearCP/index.html">2. Cómo crear una clave primaria</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">3. Cómo hacer que un campo sea obligatorio-opcional</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Relacion1M/index.html">4. Cómo crear una relación uno a muchos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../RelacionMM/index.html">5. Cómo hacer una Relación muchos a muchos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../RelacionAGRCOMP/index.html">6. Cómo hacer que una relación sea de agregación o de composición</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">POO How To</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">3. Cómo hacer que un campo sea obligatorio-opcional</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="como-hacer-que-un-campo-sea-obligatorio-opcional">Cómo hacer que un campo sea obligatorio-opcional</h2>
+<ul>
+<li>Campo obligatorio: no es nulable y se asigna en el constructor. Si el campo es un tipo referencia, en el constructor se comprobará que no es ni vacío ni <code>null</code></li>
+<li>Campo opcional: es nulable y se inicializa a null</li>
+</ul>
+<pre><code class="language-csharp">public class Persona
+{
+    public string Nombre { get; } // Obligatorio
+    public string DNI { get; } // Obligatorio
+    public DateOnly? FechaNacimiento { get; set; } // Opcional. Permite fechas de nacimiento futuras!!
+
+    public int Edad =&gt; FechaNacimiento.HasValue ? DateTime.Now.Year - FechaNacimiento.Value.Year : 0;
+
+    public Persona(string nombre, string dni)
+    {
+        if (string.IsNullOrEmpty(nombre))
+        {
+            throw new ArgumentException(&quot;El nombre no puede estar vacío.&quot;, nameof(nombre));
+        }
+        Nombre = nombre;
+        if (string.IsNullOrEmpty(dni))
+        {
+            throw new ArgumentException(&quot;El DNI no puede estar vacío.&quot;, nameof(DNI));
+        }
+        DNI = dni;
+        FechaNacimiento = null;
+    }
+
+    private string DescripcionEdad() =&gt; FechaNacimiento.HasValue ? $&quot;{Edad} años&quot; : &quot;Edad no disponible&quot;;
+    public override string ToString() =&gt; $&quot;{Nombre} ({DNI}) - Edad a fecha ({DateTime.Now.ToString(&quot;d/M/yy&quot;)}): {DescripcionEdad()}&quot;;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Persona persona1 = new Persona(&quot;Juan Pérez&quot;, &quot;12345678A&quot;);
+        persona1.FechaNacimiento = new DateOnly(1990, 1, 1);
+        Console.WriteLine(persona1);
+
+        Persona persona2 = new Persona(&quot;María López&quot;, &quot;87654321B&quot;);
+        Console.WriteLine(persona2);
+    }
+}
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../CrearCP/" class="btn btn-neutral float-left" title="2. Cómo crear una clave primaria"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Relacion1M/" class="btn btn-neutral float-right" title="4. Cómo crear una relación uno a muchos">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../CrearCP/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../Relacion1M/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

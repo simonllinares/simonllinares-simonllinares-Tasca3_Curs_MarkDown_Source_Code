@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>POO How-To - POO How To</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "POO How-To";
+        var mkdocs_page_input_path = "POOHowTo.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="..">
+          <img src="../img/favicon.ico" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../index.html">1. Introducción</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../CrearCP/index.html">2. Cómo crear una clave primaria</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../CampoOOP/index.html">3. Cómo hacer que un campo sea obligatorio-opcional</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Relacion1M/index.html">4. Cómo crear una relación uno a muchos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../RelacionMM/index.html">5. Cómo hacer una Relación muchos a muchos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../RelacionAGRCOMP/index.html">6. Cómo hacer que una relación sea de agregación o de composición</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">POO How To</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">POO How-To</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="poo-how-to">POO How-To</h1>
+<div class="toc">
+<ul>
+<li><a href="#poo-how-to">POO How-To</a><ul>
+<li><a href="#como-crear-una-clave-primaria">Cómo crear una clave primaria</a></li>
+<li><a href="#como-hacer-que-un-campo-sea-obligatorio-opcional">Cómo hacer que un campo sea obligatorio-opcional</a></li>
+<li><a href="#como-crear-una-relacion-uno-a-muchos">Cómo crear una relación uno a muchos</a><ul>
+<li><a href="#solo-navegacion-del-lado-uno-al-lado-muchos">Sólo navegación del lado uno al lado muchos</a></li>
+<li><a href="#solo-navegacion-desde-el-lado-muchos-al-lado-uno">Sólo navegación desde el lado muchos al lado uno</a></li>
+<li><a href="#navegacion-bidireccional">Navegación bidireccional</a></li>
+</ul>
+</li>
+<li><a href="#como-hacer-una-relacion-muchos-a-muchos">Cómo hacer una Relación muchos a muchos</a></li>
+<li><a href="#como-hacer-que-una-relacion-sea-de-agregacion-o-de-composicion">Cómo hacer que una relación sea de agregación o de composición</a><ul>
+<li><a href="#agregacion">Agregación</a></li>
+<li><a href="#composicion">Composición</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="como-crear-una-clave-primaria">Cómo crear una clave primaria</h2>
+<ul>
+<li>Crear una propiedad de solo lectura basada en un campo de respaldo estático para llevar la cuenta de objetos creados</li>
+<li>Permite hacer saber cuántos productos se han creado en total</li>
+<li>No es útil en entornos multithread porque varios hilos podrían leer su valor a la vez</li>
+</ul>
+<pre><code class="language-csharp">public class Producto
+{
+    private static int _contadorProductos = 0; //Campo estático: solo hay una copia compartida por todas las instancias de la clase
+
+    public int Id { get; } // Esto no es multithread-safe
+    public string Nombre { get; }
+
+    public Producto(string nombre)
+    {
+        _contadorProductos++;
+        Id = _contadorProductos;
+        Nombre = nombre; // Se debería comprobar que nombre no sea ni null ni vacío
+    }
+
+    public static int ProductosCreados =&gt; _contadorProductos;  // Propiedad estática: permite acceder al contador sin un objeto
+
+    public override string ToString() =&gt; $&quot;ID: {Id}, Nombre: {Nombre}&quot;;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Producto producto1 = new(&quot;Producto A&quot;);
+        Console.WriteLine(producto1);
+        Producto producto2 = new(&quot;Producto B&quot;);
+        Console.WriteLine(producto2);
+        Console.WriteLine($&quot;Total de productos creados: {Producto.ProductosCreados}&quot;);
+    }
+}
+</code></pre>
+<ul>
+<li>También se puede crear con un GUID</li>
+<li>Ventajas: Multithread-safe. Útil en sistemas distribuidos</li>
+<li>Desventajas: ocupa 16 <em>Bytes</em> frete a los 4 de un <code>int</code>. Es más difícil de leer para humanos</li>
+</ul>
+<pre><code class="language-csharp">public class Producto
+{
+    public Guid Id { get; } 
+    public string Nombre { get; }
+
+    public Producto(string nombre)
+    {
+        Id = Guid.NewGuid(); // Multithread-safe. Útil en sistemas distribuidos
+        Nombre = nombre; // Se debería comprobar que nombre no sea ni null ni vacío
+    }
+    public override string ToString() =&gt; $&quot;Id={Id}, Nombre={Nombre}]&quot;;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Producto producto1 = new(&quot;Producto A&quot;);
+        Console.WriteLine(producto1);
+        Producto producto2 = new(&quot;Producto B&quot;);
+        Console.WriteLine(producto2);
+    }
+}
+</code></pre>
+<h2 id="como-hacer-que-un-campo-sea-obligatorio-opcional">Cómo hacer que un campo sea obligatorio-opcional</h2>
+<ul>
+<li>Campo obligatorio: no es nulable y se asigna en el constructor. Si el campo es un tipo referencia, en el constructor se comprobará que no es ni vacío ni <code>null</code></li>
+<li>Campo opcional: es nulable y se inicializa a null</li>
+</ul>
+<pre><code class="language-csharp">public class Persona
+{
+    public string Nombre { get; } // Obligatorio
+    public string DNI { get; } // Obligatorio
+    public DateOnly? FechaNacimiento { get; set; } // Opcional. Permite fechas de nacimiento futuras!!
+
+    public int Edad =&gt; FechaNacimiento.HasValue ? DateTime.Now.Year - FechaNacimiento.Value.Year : 0;
+
+    public Persona(string nombre, string dni)
+    {
+        if (string.IsNullOrEmpty(nombre))
+        {
+            throw new ArgumentException(&quot;El nombre no puede estar vacío.&quot;, nameof(nombre));
+        }
+        Nombre = nombre;
+        if (string.IsNullOrEmpty(dni))
+        {
+            throw new ArgumentException(&quot;El DNI no puede estar vacío.&quot;, nameof(DNI));
+        }
+        DNI = dni;
+        FechaNacimiento = null;
+    }
+
+    private string DescripcionEdad() =&gt; FechaNacimiento.HasValue ? $&quot;{Edad} años&quot; : &quot;Edad no disponible&quot;;
+    public override string ToString() =&gt; $&quot;{Nombre} ({DNI}) - Edad a fecha ({DateTime.Now.ToString(&quot;d/M/yy&quot;)}): {DescripcionEdad()}&quot;;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Persona persona1 = new Persona(&quot;Juan Pérez&quot;, &quot;12345678A&quot;);
+        persona1.FechaNacimiento = new DateOnly(1990, 1, 1);
+        Console.WriteLine(persona1);
+
+        Persona persona2 = new Persona(&quot;María López&quot;, &quot;87654321B&quot;);
+        Console.WriteLine(persona2);
+    }
+}
+</code></pre>
+<h2 id="como-crear-una-relacion-uno-a-muchos">Cómo crear una relación uno a muchos</h2>
+<p>Vamos a trabajar el ejemplo de un <em>Blog</em> que puede contener cero o muchos <em>Post</em></p>
+<h3 id="solo-navegacion-del-lado-uno-al-lado-muchos">Sólo navegación del lado uno al lado muchos</h3>
+<pre><code class="language-csharp">// Clase principal (padre)
+public class Blog
+{
+    public string CodigoHtml { get; set; }
+    public List&lt;Post&gt; Posts { get; } // Desde el Blog puedo acceder a todos sus Posts
+
+    public Blog(string codigoHtml)
+    {
+        CodigoHtml = codigoHtml;
+        Posts = new List&lt;Post&gt;();
+    }
+
+    public void AgregarPost(Post post)
+    {
+        Posts.Add(post);
+    }
+}
+
+// Clase dependiente (hija)
+// Desde un Post no puedo acceder al Blog
+public class Post
+{
+    public string CodigoHtml { get; set; }
+    public Post(string codigoHtml) =&gt; CodigoHtml = codigoHtml;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Blog miBlog = new Blog(&quot;Mi Blog&quot;);
+        Post post1 = new (&quot;Mi primer post&quot;);
+        miBlog.AgregarPost(post1);
+        Post post2 = new (&quot;Mi segundo post&quot;);
+        miBlog.AgregarPost(post2);
+
+        Console.WriteLine(&quot;Contenido del Blog:&quot;);
+        Console.WriteLine(miBlog.CodigoHtml);
+        foreach (var post in miBlog.Posts)
+        {
+            Console.WriteLine(&quot;- &quot; + post.CodigoHtml);
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>Con esta estructura solo el <em>Blog</em> conoce a sus <em>Post</em> por lo que hay una mejor encapsulación</li>
+<li>Si hacemos una búsqueda de <em>Posts</em> que contienen una palabra clave, será más complicado obtener los <em>Blogs</em> en los que se publicaron dichos <em>Posts</em></li>
+</ul>
+<h3 id="solo-navegacion-desde-el-lado-muchos-al-lado-uno">Sólo navegación desde el lado muchos al lado uno</h3>
+<pre><code class="language-csharp">public class Blog
+{
+    public string CodigoHtml { get; set; }
+
+    public Blog(string codigoHtml) =&gt; CodigoHtml = codigoHtml;
+}
+
+public class Post
+{
+    public string CodigoHtml { get; set; }
+    public Blog Blog { get; } // Desde un Post se puede acceder al Blog asociado
+
+    public Post(string codigoHtml, Blog blog)
+    {
+        CodigoHtml = codigoHtml;
+        Blog = blog;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Blog miBlog1 = new Blog(&quot;Mi Blog&quot;);
+        Blog miBlog2 = new Blog(&quot;Otro Blog&quot;);
+
+        List&lt;Post&gt; posts = [];
+
+        Post post = new Post(&quot;Post 1&quot;, miBlog1);
+        posts.Add(post);
+        post = new Post(&quot;Post 2&quot;, miBlog1);
+        posts.Add(post);
+        post = new Post(&quot;Post 3&quot;, miBlog2);
+        posts.Add(post);
+        post = new Post(&quot;Post 4&quot;, miBlog1);
+        posts.Add(post);
+
+        foreach (Post p in posts)
+        {
+            Console.WriteLine($&quot;Post: {p.CodigoHtml}, pertenece al Blog: {p.Blog.CodigoHtml}&quot;);
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>El <em>Post</em> conoce a su <em>Blog</em>, pero este no conoce a sus <em>Posts</em>.</li>
+</ul>
+<h3 id="navegacion-bidireccional">Navegación bidireccional</h3>
+<pre><code class="language-csharp">public class Blog
+{
+    public string CodigoHtml { get; set; }
+    public List&lt;Post&gt; Posts { get; } // Desde el Blog puedo acceder a todos sus Posts
+
+    public Blog(string codigoHtml)
+    {
+        CodigoHtml = codigoHtml;
+        Posts = new List&lt;Post&gt;();
+    }
+
+    public void AgregarPost(Post post)
+    {
+        post.Blog = this; // Asignar el Blog al Post
+        Posts.Add(post);
+    }
+
+    public override string ToString() =&gt; $&quot;Blog: {CodigoHtml}&quot;;
+}
+
+public class Post
+{
+    public string CodigoHtml { get; set; }
+    public Blog? Blog { get; set; } // Desde un Post se puede acceder al Blog asociado
+    // Al crear un Post, todavía no está asignado a ningún Blog
+
+    public Post(string codigoHtml) =&gt; CodigoHtml = codigoHtml;
+
+    public override string ToString() =&gt; $&quot;Post: {CodigoHtml}&quot;;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Blog miBlog1 = new Blog(&quot;Mi Blog&quot;);
+        Blog miBlog2 = new Blog(&quot;Otro Blog&quot;);
+
+        List&lt;Post&gt; posts = [];
+
+        Post post = new Post(&quot;Post 1&quot;);
+        posts.Add(post);
+        miBlog1.AgregarPost(post);
+        post = new Post(&quot;Post 2&quot;);
+        posts.Add(post);
+        miBlog1.AgregarPost(post);
+        post = new Post(&quot;Post 3&quot;);
+        posts.Add(post);
+        miBlog2.AgregarPost(post);
+        post = new Post(&quot;Post 4&quot;);
+        posts.Add(post);
+        miBlog2.AgregarPost(post);
+
+        Console.WriteLine(&quot;Partiendo de un Blog puedo obtener sus Posts:&quot;);
+        Console.WriteLine(miBlog1);
+        foreach (Post p in miBlog1.Posts)
+        {
+            Console.WriteLine(&quot;\t&quot; + p);
+        }
+
+        Console.WriteLine(&quot;Partiendo de un Post puedo obtener su Blog:&quot;);
+        foreach (Post p in posts)
+        {
+            Console.Write(p + &quot; pertenece a &quot;);
+            Console.WriteLine(p.Blog);
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>Esta opción tiene más riesgo de inconsistencias porque la información está duplicada</li>
+<li>Requiere mantener la sincronía de manera manual a la hora de crear, eliminar o cambiar <em>Blogs</em> y <em>Posts</em></li>
+</ul>
+<h2 id="como-hacer-una-relacion-muchos-a-muchos">Cómo hacer una Relación muchos a muchos</h2>
+<ul>
+<li>Vamos a ver un ejemplo en el que un <em>Post</em> puede tener muchas <em>Etiquetas</em> y una <em>Etiqueta</em> puede estar asignada a muchos <em>Posts</em></li>
+</ul>
+<pre><code class="language-csharp">public class Post
+{
+    public string CodigoHtml { get; set; }
+    public List&lt;Etiqueta&gt; Etiquetas { get; } = [];
+
+    public Post(string codigoHtml) =&gt; CodigoHtml = codigoHtml;
+
+    public void AgregarEtiqueta(Etiqueta etiqueta)
+    {
+        Etiquetas.Add(etiqueta);
+        etiqueta.Posts.Add(this);
+    }
+
+    public override string ToString() =&gt; CodigoHtml;
+
+    public string PostYEtiquetas()
+    {
+        string resultado = $&quot;Post: {CodigoHtml}\nEtiquetas:\n&quot;;
+        foreach (var etiqueta in Etiquetas)
+        {
+            resultado += $&quot;- {etiqueta}\n&quot;;
+        }
+        return resultado;
+    }
+}
+
+public class Etiqueta
+{
+    public string TextoEtiqueta { get; set; }
+    public List&lt;Post&gt; Posts { get; } = [];
+
+    public Etiqueta(string textoEtiqueta) =&gt; TextoEtiqueta = textoEtiqueta;
+
+    public override string ToString() =&gt; TextoEtiqueta;
+
+    public string EtiquetaYPosts()
+    {
+        string resultado = $&quot;Etiqueta: {TextoEtiqueta}\nPosts:\n&quot;;
+        foreach (var post in Posts)
+        {
+            resultado += $&quot;- {post}\n&quot;;
+        }
+        return resultado;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Crear etiquetas
+        Etiqueta etiquetaCSharp = new (&quot;C#&quot;);
+        Etiqueta etiquetaDotNet = new (&quot;.NET&quot;);
+        Etiqueta etiquetaProgramacion = new (&quot;Programación&quot;);
+        List&lt;Etiqueta&gt; etiquetas = new List&lt;Etiqueta&gt; { etiquetaCSharp, etiquetaDotNet, etiquetaProgramacion };
+
+        // Crear posts
+        Post post1 = new Post (&quot;Introducción a C#&quot;);
+        Post post2 = new Post (&quot;Desarrollo con .NET&quot;);
+        List&lt;Post&gt; posts = new List&lt;Post&gt; { post1, post2 };
+
+        // Asociar etiquetas a los posts
+        post1.AgregarEtiqueta(etiquetaCSharp);
+        post1.AgregarEtiqueta(etiquetaProgramacion);
+        post2.AgregarEtiqueta(etiquetaDotNet);
+        post2.AgregarEtiqueta(etiquetaProgramacion);
+
+        // Mostrar resultados
+        Console.WriteLine(&quot;Listado de posts y sus etiquetas:&quot;);
+        foreach (var post in posts)
+        {
+            Console.WriteLine(post.PostYEtiquetas());
+        }
+        Console.WriteLine(&quot;Listado de etiquetas y sus posts:&quot;);
+        foreach (var etiqueta in etiquetas)
+        {
+            Console.WriteLine(etiqueta.EtiquetaYPosts());
+        }
+    }
+}
+</code></pre>
+<h2 id="como-hacer-que-una-relacion-sea-de-agregacion-o-de-composicion">Cómo hacer que una relación sea de agregación o de composición</h2>
+<h3 id="agregacion">Agregación</h3>
+<p>En el apartado "Sólo navegación del lado uno al lado muchos" del punto "Cómo crear una relación uno a muchos" hemos visto el siguiente código:</p>
+<pre><code class="language-csharp">public class Blog
+{
+    public string CodigoHtml { get; set; }
+    public List&lt;Post&gt; Posts { get; } // Desde el Blog puedo acceder a todos sus Posts
+
+    public Blog(string codigoHtml)
+    {
+        CodigoHtml = codigoHtml;
+        Posts = new List&lt;Post&gt;();
+    }
+
+    public void AgregarPost(Post post)
+    {
+        Posts.Add(post);
+    }
+}
+
+public class Post
+{
+    public string CodigoHtml { get; set; }
+    public Post(string codigoHtml) =&gt; CodigoHtml = codigoHtml;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Blog miBlog = new Blog(&quot;Mi Blog&quot;);
+        Post post1 = new (&quot;Mi primer post&quot;);
+        miBlog.AgregarPost(post1);
+        Post post2 = new (&quot;Mi segundo post&quot;);
+        miBlog.AgregarPost(post2);
+
+        Console.WriteLine(&quot;Contenido del Blog:&quot;);
+        Console.WriteLine(miBlog.CodigoHtml);
+        foreach (var post in miBlog.Posts)
+        {
+            Console.WriteLine(&quot;- &quot; + post.CodigoHtml);
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>Es importante fijarse cómo, en este ejemplo, el <em>Post</em> tiene una vida independiente del Blog, es decir, si un <em>Blog</em> desaparece, no tienen porqué desaparecer todos sus <em>Posts</em>.</li>
+<li>Por ejemplo, "Mi primer post" está guardado en <code>post1</code>. Si desaparece su blog: <code>miBlog</code>, el post continuará estando guardado en <code>post1</code></li>
+<li>A este tipo de relación, se le llama <strong>Agregación</strong>.</li>
+</ul>
+<h3 id="composicion">Composición</h3>
+<ul>
+<li>En este tipo de relación queremos que al desaparecer un <em>Blog</em> desaparezcan junto con él todos sus <em>Posts</em>. Para conseguirlo, la única referencia a un <em>Post</em> debe estar guardada dentro del <em>Blog</em> y, por tanto, es necesario crear (<code>new</code>) el <em>Post</em> dentro del <em>Blog</em>. A este tipo de relación, se le llama <strong>Composición</strong> y a los métodos que crean objetos se les llama <strong>Métodos factoría</strong></li>
+</ul>
+<pre><code class="language-csharp">public class Blog
+{
+    public string CodigoHtml { get; set; }
+    public List&lt;Post&gt; Posts { get; } // Desde el Blog puedo acceder a todos sus Posts
+
+    public Blog(string codigoHtml)
+    {
+        CodigoHtml = codigoHtml;
+        Posts = new List&lt;Post&gt;();
+    }
+
+    public void AgregarPost(string codigoHtml)
+    {
+        Post nuevoPost = new (codigoHtml);
+        Posts.Add(nuevoPost);
+    }
+}
+
+public class Post
+{
+    public string CodigoHtml { get; set; }
+    public Post(string codigoHtml) =&gt; CodigoHtml = codigoHtml;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Blog miBlog = new Blog(&quot;Mi Blog&quot;);
+        miBlog.AgregarPost(&quot;Mi primer post&quot;);
+        miBlog.AgregarPost(&quot;Mi segundo post&quot;);
+
+        Console.WriteLine(&quot;Contenido del Blog:&quot;);
+        Console.WriteLine(miBlog.CodigoHtml);
+        foreach (var post in miBlog.Posts)
+        {
+            Console.WriteLine(&quot;- &quot; + post.CodigoHtml);
+        }
+    }
+}
+</code></pre>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
